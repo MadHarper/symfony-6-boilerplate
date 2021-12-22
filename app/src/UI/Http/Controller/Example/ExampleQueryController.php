@@ -25,7 +25,7 @@ class ExampleQueryController extends QueryController implements LoggerAwareInter
      */
     public function exampleAction(Request $request): Response
     {
-        $this-> logger->critical('ALARM 2!!! Hr-hr? Joke ))');
+        $this->logger->critical('ALARM 2!!! Hr-hr? Joke ))');
 
         $id = (int) $request->get('id');
 

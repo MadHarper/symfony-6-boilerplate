@@ -16,6 +16,8 @@ framework:
                 default_middleware: false
                 middleware:
                     - handle_message
+            messenger.bus.kafka:
+                middleware: ~
 
         transports:
             async_domain:
@@ -32,5 +34,46 @@ framework:
                     queues:
                         domain_events:
                             binding_keys: ['#']
+
+            # Kafka Producer
+            producer:
+                dsn: '%env(KAFKA_URL)%'
+                # serializer: App\Infrastructure\Messenger\MySerializer
+                options:
+                    flushTimeout: 10000
+                    flushRetries: 5
+                    topic:
+                        name: 'notifications'
+                    kafka_conf:
+                        group.id: 'hrm-group-id-1'
+#                        security.protocol: 'sasl_ssl'
+#                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
+#                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
+#                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
+#                        sasl.mechanisms: 'SCRAM-SHA-256'
+
+            # Kafka Consumer
+            consumer:
+                dsn: '%env(KAFKA_URL)%'
+                # serializer: App\Infrastructure\Messenger\MySerializer
+                options:
+                    commitAsync: true
+                    receiveTimeout: 10000
+                    topic:
+                        name: "notifications"
+                    kafka_conf:
+                        enable.auto.offset.store: 'false'
+                        group.id: 'hrm-group-id-1' # should be unique per consumer
+#                        security.protocol: 'sasl_ssl'
+#                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
+#                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
+#                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
+#                        sasl.mechanisms: 'SCRAM-SHA-256'
+                        max.poll.interval.ms: '45000'
+                    topic_conf:
+                        auto.offset.reset: 'earliest'
+
         routing:
              'App\Core\Shared\Domain\Event\AsyncDomainEventInterface': async_domain
+             'App\Core\Shared\Domain\Event\AsyncKafkaInterface': producer
+             #'App\Core\Shared\Application\Messaging\KafkaHandlerInterface': producer

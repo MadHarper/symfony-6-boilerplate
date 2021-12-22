@@ -88,5 +88,17 @@ services:
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       # Топики через запятую
-      KAFKA_CREATE_TOPICS: hrm:1:1,notifications:1:1
+      KAFKA_CREATE_TOPICS: "hrm:1:1,notifications:1:1"
       KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_READONLY=false

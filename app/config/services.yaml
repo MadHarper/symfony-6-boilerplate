@@ -45,6 +45,11 @@ services:
             tags:
                 - { name: messenger.message_handler, bus: messenger.bus.event }
 
+        App\Core\Shared\Application\Messaging\KafkaHandlerInterface:
+            public: true
+            tags:
+                - { name: messenger.message_handler, bus: messenger.bus.kafka }
+
     App\Core\Shared\Infrastructure\Bus\CommandBus:
         arguments: ['@messenger.bus.command']
 
@@ -53,6 +58,9 @@ services:
 
     App\Core\Shared\Infrastructure\Bus\QueryBus:
         arguments: ['@messenger.bus.query']
+
+    App\Core\Shared\Infrastructure\Bus\KafkaBus:
+        arguments: ['@messenger.bus.kafka']
 
     Jsor\Doctrine\PostGIS\Event\ORMSchemaEventSubscriber:
         tags:
