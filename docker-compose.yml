@@ -1,0 +1,92 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+      args:
+        UID: $UID
+        GUID: $GUID
+    volumes:
+      - "./app:/app"
+    ports:
+      - $PORT:80
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+      args:
+        UID: $UID
+        GUID: $GUID
+    volumes:
+      - "./app:/app"
+    depends_on:
+      - db
+      - rabbitmq
+
+  db:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    expose:
+      - "5432"
+    ports:
+      - $DB_PORT:5432
+    volumes:
+      - "./volumes/postgresql/data:/var/lib/postgresql/data/pgdata"
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASS
+
+  rabbitmq:
+    build:
+      context: ./docker/rabbitmq
+    volumes:
+      - "./volumes/rabbitmq:/var/lib/rabbitmq:cached"
+    ports:
+      - $RABBITMQ_PORT:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=$RABBITMQ_USER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQ_PASS
+      - RABBITMQ_DEFAULT_VHOST=$RABBITMQ_VHOST
+
+  php_pm2:
+    hostname: $BACKEND_PM2_HOSTNAME
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+      args:
+        UID: $UID
+        GUID: $GUID
+    links:
+      - db
+    expose:
+      - "9000"
+    volumes:
+      - "./app:/app"
+    depends_on:
+      - php
+      - rabbitmq
+    command: bash -c "sleep 10 && pm2 start pm2.yml && pm2 logs"
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # Топики через запятую
+      KAFKA_CREATE_TOPICS: hrm:1:1,notifications:1:1
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092

@@ -1,0 +1,36 @@
+framework:
+    messenger:
+        default_bus: messenger.bus.command
+
+        buses:
+            messenger.bus.command:
+                default_middleware: false
+                middleware:
+                    - handle_message
+#                    - audit_middleware     нужно сделать
+            messenger.bus.query:
+                default_middleware: false
+                middleware:
+                    - handle_message
+            messenger.bus.event:
+                default_middleware: false
+                middleware:
+                    - handle_message
+
+        transports:
+            async_domain:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+                options:
+                    exchange:
+                        type: topic
+                        name: domain_events
+                    queues:
+                        domain_events:
+                            binding_keys: ['#']
+        routing:
+             'App\Core\Shared\Domain\Event\AsyncDomainEventInterface': async_domain
