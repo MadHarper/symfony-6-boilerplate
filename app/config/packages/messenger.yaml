@@ -76,4 +76,3 @@ framework:
         routing:
              'App\Core\Shared\Domain\Event\AsyncDomainEventInterface': async_domain
              'App\Core\Shared\Domain\Event\AbstractKafkaEvent': producer
-             #'App\Core\Shared\Application\Messaging\KafkaHandlerInterface': producer
