@@ -18,7 +18,7 @@ class KafkaProducerController
      */
     public function exampleAction(Request $request, KafkaBusInterface $bus): Response
     {
-        $bus->dispatch(new KafkaTestEvent());
+        $bus->dispatch(new KafkaTestEvent('79', 'Desc'));
         dd("from Kafka Controller");
     }
 }

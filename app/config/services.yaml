@@ -33,22 +33,22 @@ services:
         App\Core\Shared\Application\Messaging\CommandHandlerInterface:
             public: true
             tags:
-                - { name: messenger.message_handler, bus: messenger.bus.command }
+                - { name: messenger.message_handler }
 
         App\Core\Shared\Application\Messaging\QueryHandlerInterface:
             public: true
             tags:
-                - { name: messenger.message_handler, bus: messenger.bus.query }
+                - { name: messenger.message_handler }
 
         App\Core\Shared\Application\Messaging\EventHandlerInterface:
             public: true
             tags:
-                - { name: messenger.message_handler, bus: messenger.bus.event }
+                - { name: messenger.message_handler }
 
         App\Core\Shared\Application\Messaging\KafkaHandlerInterface:
             public: true
             tags:
-                - { name: messenger.message_handler, bus: messenger.bus.kafka }
+                - { name: messenger.message_handler }
 
     App\Core\Shared\Infrastructure\Bus\CommandBus:
         arguments: ['@messenger.bus.command']

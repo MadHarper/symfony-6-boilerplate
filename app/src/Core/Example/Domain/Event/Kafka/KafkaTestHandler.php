@@ -16,9 +16,11 @@ class KafkaTestHandler implements KafkaHandlerInterface
 
     public function __invoke(KafkaTestEvent $event)
     {
-        $this->logger->info("K_A_F_K_A!!!");
+        $this->logger->info("K_A_F_K_A!");
+        $this->logger->info($event->getDescription());
+        $this->logger->info($event->getId());
 
         //throw new \DomainException('FFFFF');
-        //dd(2);
+        dd(2);
     }
 }

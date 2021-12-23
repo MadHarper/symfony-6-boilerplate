@@ -38,7 +38,7 @@ framework:
             # Kafka Producer
             producer:
                 dsn: '%env(KAFKA_URL)%'
-                # serializer: App\Infrastructure\Messenger\MySerializer
+                serializer: App\Core\Shared\Infrastructure\Serializer\KafkaExampleSerializer
                 options:
                     flushTimeout: 10000
                     flushRetries: 5
@@ -55,7 +55,7 @@ framework:
             # Kafka Consumer
             consumer:
                 dsn: '%env(KAFKA_URL)%'
-                # serializer: App\Infrastructure\Messenger\MySerializer
+                serializer: App\Core\Shared\Infrastructure\Serializer\KafkaExampleSerializer
                 options:
                     commitAsync: true
                     receiveTimeout: 10000
@@ -75,5 +75,5 @@ framework:
 
         routing:
              'App\Core\Shared\Domain\Event\AsyncDomainEventInterface': async_domain
-             'App\Core\Shared\Domain\Event\AsyncKafkaInterface': producer
+             'App\Core\Shared\Domain\Event\AbstractKafkaEvent': producer
              #'App\Core\Shared\Application\Messaging\KafkaHandlerInterface': producer

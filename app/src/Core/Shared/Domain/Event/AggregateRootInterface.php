@@ -9,8 +9,5 @@ interface AggregateRootInterface
      */
     public function releaseEvents(): array;
 
-    /**
-     * @return AggregateRootInterface[]
-     */
     public function getChildEntities(): \Generator;
 }
