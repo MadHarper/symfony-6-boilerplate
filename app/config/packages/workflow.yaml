@@ -1,0 +1,62 @@
+framework:
+  workflows:
+    shift_admin_publishing:
+      type: 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\Core\Example\Domain\Entity\Baz
+      initial_marking: is_planned
+      places:
+        - is_planned
+        - check_in
+        - coming_out
+        - is_not_worked
+        - refused_at_this_time
+        - did_not_worked
+      transitions:  # транзишины должны называться to_STATUS, таким образом зная в какой статус мы хотим перевести достаточно просто добавить to_
+        to_check_in:
+          from: is_planned
+          to:   check_in
+        to_coming_out:
+          from: [is_planned, check_in]
+          to:   coming_out
+        to_did_not_worked:
+          from: is_planned
+          to:   did_not_worked
+        to_refused_at_this_time:
+          from: is_planned
+          to:   refused_at_this_time
+
+    shift_employee_publishing:
+      type: 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\Core\Example\Domain\Entity\Baz
+      initial_marking: is_planned
+      places:
+        - is_planned
+        - check_in
+        - coming_out
+        - is_not_worked
+        - refused_at_this_time
+      transitions:
+        to_check_in:
+          from: is_planned
+          to: check_in
+        to_not_worked:
+          from: is_planned
+          to: is_not_worked
+        to_coming_out:
+          from: check_in
+          to: coming_out
+        reject:
+          from: is_planned
+          to: refused_at_this_time

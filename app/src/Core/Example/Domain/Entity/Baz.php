@@ -46,12 +46,19 @@ class Baz implements AggregateRootInterface
      */
     private $seconds;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length="22", nullable=false)
+     */
+    private $status;
+
     #[Pure]
     public function __construct(BazName $name, BazAge $age)
     {
         $this->name = $name;
         $this->age = $age;
         $this->seconds = new ArrayCollection();
+        $this->status = 'is_planned';
 
         $this->recordEvent(new BazCreatedEvent($this));
     }
@@ -89,5 +96,15 @@ class Baz implements AggregateRootInterface
         }
 
         return $this;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status, $context = []): void
+    {
+        $this->status = $status;
     }
 }

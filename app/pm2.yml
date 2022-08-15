@@ -6,9 +6,9 @@ apps:
     instances: 4
     user: www-data
 
-  - script: bin/console
-    args: "messenger:consume consumer --time-limit=3600 --limit=1000"
-    name: "kafka_consumer_messenger"
-    interpreter: php
-    instances: 4
-    user: www-data
+#  - script: bin/console
+#    args: "messenger:consume consumer --time-limit=3600 --limit=1000"
+#    name: "kafka_consumer_messenger"
+#    interpreter: php
+#    instances: 4
+#    user: www-data
