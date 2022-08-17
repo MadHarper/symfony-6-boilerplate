@@ -25,6 +25,7 @@ class RequestDataResolver implements ArgumentValueResolverInterface
         try {
             $model = $this->serializer->deserialize($request->getContent(), $argument->getType(), JsonEncoder::FORMAT);
         } catch (\Throwable $e) {
+            dd($e);
             throw new \DomainException("asdasd");
         }
 
@@ -33,7 +34,7 @@ class RequestDataResolver implements ArgumentValueResolverInterface
             throw new \DomainException($errors);
         }
 
-        dd($model);
+        //dd($model);
 
         yield $model;
     }

@@ -36,6 +36,7 @@ class ExampleQueryController extends QueryController implements LoggerAwareInter
      */
     public function exampleAction(Request $request): Response
     {
+        dd(777);
         $this->logger->critical('ALARM 2!!! Hr-hr? Joke ))');
 
         $id = (int) $request->get('id');
