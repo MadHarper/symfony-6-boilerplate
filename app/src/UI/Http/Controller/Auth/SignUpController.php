@@ -18,8 +18,6 @@ class SignUpController
      */
     public function signUp(#[RequestData] SignUpRequest $data)
     {
-        $this->signUpService->signUp($data);
-
-        dd(999);
+        return $this->signUpService->signUp($data);
     }
 }
